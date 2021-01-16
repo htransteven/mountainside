@@ -2,18 +2,18 @@ import React from "react";
 import styled from "styled-components";
 import { useFirebase } from "../contexts/FirebaseContext";
 
-const TestButton = styled.button``;
+import RoomController from "./RoomController";
+
+const HomeWrapper = styled.div`
+  padding: 50px;
+`;
 
 const Home = () => {
   const firebase = useFirebase();
-
-  const handleClick = () => {
-    // do stuff with the firebase object given above
-  };
   return (
-    <div>
-      <TestButton>Test Code</TestButton>
-    </div>
+    <HomeWrapper>
+      <RoomController />
+    </HomeWrapper>
   );
 };
 
