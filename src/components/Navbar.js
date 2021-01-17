@@ -5,8 +5,9 @@ import nav_logo from "../images/mtnside-logo-white.png";
 
 const Wrapper = styled.div`
   position: sticky;
+  background-color: ${colors.background};
   top: 0;
-  z-index: 1;
+  z-index: 999;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -36,6 +37,15 @@ const NavLogo = styled.img`
   height: 85%;
   width: auto;
   object-fit: cover;
+
+  @media (max-width: 768px) {
+    width: 200px;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    width: 150px;
+  }
 `;
 
 const NavLinkWrapper = styled.div`
@@ -54,6 +64,14 @@ const NavLinkWrapper = styled.div`
     &:hover {
       opacity: 1;
       border: 1px solid ${colors.lightBlue};
+    }
+
+    @media (max-width: 768px) {
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 520px) {
+      font-size: 0.8rem;
     }
   }
 `;

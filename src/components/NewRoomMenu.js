@@ -20,6 +20,14 @@ const TitleLabel = styled.span`
   font-size: 2.5rem;
   line-height: 1em;
   margin-bottom: 1.5rem;
+
+  @media (max-width: 1000px) {
+    font-size: 2rem;
+  }
+
+  @media (max-width: 728px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const InputLabel = styled.label`

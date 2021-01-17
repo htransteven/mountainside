@@ -16,8 +16,19 @@ const PageWrapper = styled.div`
 const PhotoGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto auto auto auto;
-  grid-gap: 10px 30px;
+  grid-template-rows: auto;
+  grid-gap: 30px;
+
+  @media (max-width: 1050px) {
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: auto;
+  }
+`;
+
+const MemberWrapper = styled.div`
+  display: grid;
+  grid-template-rows: repeat(4, auto);
+  grid-gap: 10px;
 `;
 
 const PersonPhoto = styled.img`
@@ -72,33 +83,42 @@ const AboutPage = () => {
   return (
     <PageWrapper>
       <PhotoGrid>
-        <PersonPhoto src={steven} />
-        <PersonPhoto src={shivam} />
-        <PersonPhoto src={moises} />
-        <Name>Steven Huynh-Tran</Name>
-        <Name>Shivam Misra</Name>
-        <Name>Moises Gutierrez</Name>
-        <SubTitle>UC Santa Barbara '22</SubTitle>
-        <SubTitle>UC Santa Barbara '22</SubTitle>
-        <SubTitle>UC Santa Barbara '22</SubTitle>
-        <SocialLink href={"https://linkedin.com/in/stevenht"} target={"_blank"}>
-          <Icon className={"fab fa-linkedin"} />
-          LinkedIn
-        </SocialLink>
-        <SocialLink
-          href={"https://linkedin.com/in/shivammisra2000"}
-          target={"_blank"}
-        >
-          <Icon className={"fab fa-linkedin"} />
-          LinkedIn
-        </SocialLink>
-        <SocialLink
-          href={"https://linkedin.com/in/moisesgtz"}
-          target={"_blank"}
-        >
-          <Icon className={"fab fa-linkedin"} />
-          LinkedIn
-        </SocialLink>
+        <MemberWrapper>
+          <PersonPhoto src={steven} />
+          <Name>Steven Huynh-Tran</Name>
+          <SubTitle>UC Santa Barbara '22</SubTitle>
+          <SocialLink
+            href={"https://linkedin.com/in/stevenht"}
+            target={"_blank"}
+          >
+            <Icon className={"fab fa-linkedin"} />
+            LinkedIn
+          </SocialLink>
+        </MemberWrapper>
+        <MemberWrapper>
+          <PersonPhoto src={shivam} />
+          <Name>Shivam Misra</Name>
+          <SubTitle>UC Santa Barbara '22</SubTitle>
+          <SocialLink
+            href={"https://linkedin.com/in/shivammisra2000"}
+            target={"_blank"}
+          >
+            <Icon className={"fab fa-linkedin"} />
+            LinkedIn
+          </SocialLink>
+        </MemberWrapper>
+        <MemberWrapper>
+          <PersonPhoto src={moises} />
+          <Name>Moises Gutierrez</Name>
+          <SubTitle>UC Santa Barbara '22</SubTitle>
+          <SocialLink
+            href={"https://linkedin.com/in/moisesgtz"}
+            target={"_blank"}
+          >
+            <Icon className={"fab fa-linkedin"} />
+            LinkedIn
+          </SocialLink>
+        </MemberWrapper>
       </PhotoGrid>
     </PageWrapper>
   );

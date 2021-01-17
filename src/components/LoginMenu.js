@@ -11,6 +11,7 @@ const FireBaseUIWrapper = styled.div`
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
+  text-align: center;
 `;
 
 const TitleLabel = styled.span`
@@ -49,9 +50,9 @@ const LoginMenu = ({ onAuthenticated }) => {
           user["email"] = authResult.additionalUserInfo.profile.email;
           const email_ending = user.email.substring(user.email.length - 8);
           const valid = "ucsb.edu";
-          if(valid !== email_ending){
+          if (valid !== email_ending) {
             alert("You need to log in through a valid UCSB email.");
-            window.location.reload()
+            window.location.reload();
           }
           user["firstName"] = authResult.additionalUserInfo.profile.given_name;
           user["lastName"] = authResult.additionalUserInfo.profile.family_name;

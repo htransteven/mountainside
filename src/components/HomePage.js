@@ -5,20 +5,13 @@ import { colors, fonts } from "../defaultStyles";
 import mountain_first from "../images/mountain-first.jpg";
 import main_logo from "../images/mtnside-logo-white.png";
 const PageWrapper = styled.div`
-  padding: 150px;
+  padding: 10vw;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
 `;
 
-const TitleLabel = styled.span`
-  font-family: ${fonts.secondaryFont};
-  color: ${colors.textPrimary};
-  text-transform: uppercase;
-  font-size: 2.5rem;
-  line-height: 1em;
-`;
 const Paragraph = styled.p`
   font-family: ${fonts.primaryFont};
   color: ${colors.textSecondary};
@@ -32,7 +25,7 @@ const Paragraph = styled.p`
 const HeroWrapper = styled.div`
   position: relative;
   margin-bottom: 30px;
-  width: 1300px;
+  width: 90%;
   height: 200px;
   display: flex;
   align-items: center;
@@ -54,7 +47,7 @@ const MainImage = styled.img`
   z-index: 1;
   display: flex;
   object-fit: cover;
-  width: 1200px;
+  width: 100%;
   height: auto;
 `;
 

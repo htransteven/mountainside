@@ -72,7 +72,6 @@ const ModalContentWrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 850px;
   padding: 30px;
   background-color: ${colors.background};
   border-radius: 12px;
