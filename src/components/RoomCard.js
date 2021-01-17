@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { colors, fonts } from "../defaultStyles";
+import { useFirebase } from "../contexts/FirebaseContext";
 
 const CardWrapper = styled.div`
   position: relative;
@@ -98,13 +99,55 @@ const JoinButton = styled.button`
   }
 `;
 
-const RoomCard = ({ roomName, isPublic, mood }) => {
+const CardIcon = styled.i`
+  position: absolute;
+  color: white;
+  top: 25px;
+  right: 25px;
+  display: flex;
+  font-size: 1.3rem;
+  width: auto;
+  transition: 0.15s color;
+
+  &:hover {
+    color: ${colors.red};
+  }
+`;
+
+const RoomCard = ({ isOwner, user, room }) => {
+  const firebase = useFirebase();
+  const db = firebase.firestore();
+  const { id, name, isPublic, mood, moodMessage } = room;
+
+  const handleDeleteEvent = async () => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/${user.email}/events/${id}`,
+      requestOptions
+    ).catch(function (error) {
+      alert(`Error: Failed to delete event from calendar\n\nError: ${error}`);
+    });
+    await db
+      .collection("rooms")
+      .doc(id)
+      .delete()
+      .then(function () {})
+      .catch(function (error) {
+        alert(`Error: Failed to delete room from database\n\nError: ${error}`);
+      });
+  };
   return (
     <CardWrapper>
       <CardFill />
       <CardEntry>
         <CardEntryTitle>ROOM NAME</CardEntryTitle>
-        <CardEntryValue>{roomName}</CardEntryValue>
+        <CardEntryValue>{name}</CardEntryValue>
       </CardEntry>
       <CardEntry>
         <CardEntryTitle>ACCESS</CardEntryTitle>
@@ -114,6 +157,16 @@ const RoomCard = ({ roomName, isPublic, mood }) => {
         <CardEntryTitle>MOOD</CardEntryTitle>
         <CardEntryValue>{mood}</CardEntryValue>
       </CardEntry>
+      <CardEntry>
+        <CardEntryTitle>MOOD MESSAGE</CardEntryTitle>
+        <CardEntryValue>{moodMessage}</CardEntryValue>
+      </CardEntry>
+      {isOwner && (
+        <CardIcon
+          className="fas fa-trash-alt"
+          onClick={handleDeleteEvent}
+        ></CardIcon>
+      )}
     </CardWrapper>
   );
 };

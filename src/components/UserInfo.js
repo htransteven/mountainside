@@ -1,6 +1,8 @@
 import React, { useState, useLayoutEffect, useCallback } from "react";
 import styled from "styled-components";
 import { colors, fonts } from "../defaultStyles";
+import { useFirebase } from "../contexts/FirebaseContext";
+import { useHistory } from "react-router-dom";
 
 const InfoWrapper = styled.div`
   display: flex;
@@ -49,8 +51,6 @@ const UserInfoModal = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 600px;
-  width: 850px;
   padding: 30px;
   background-color: ${colors.background};
   border-radius: 12px;
@@ -88,7 +88,30 @@ const CardEntryValue = styled.span`
   font-family: ${fonts.secondaryFont};
 `;
 
+const SubmitButton = styled.button`
+  outline: none;
+  border: none;
+  color: ${colors.textPrimary};
+  font-size: 1.1em;
+  padding: 6px 12px;
+  border-radius: 5px;
+  width: 100%;
+  opacity: 0.85;
+  background-color: ${colors.lightBlue};
+  color: ${colors.textPrimary};
+  margin-top: 1rem;
+  transition: 0.15s opacity, 0.15s background-color;
+
+  &:hover {
+    opacity: 1;
+    background-color: ${colors.lightBlue};
+    cursor: pointer;
+  }
+`;
+
 const UserInfo = ({ user }) => {
+  const browserHistory = useHistory();
+  const firebase = useFirebase();
   const [modalOpen, setModalOpen] = useState(false);
 
   const escapeModal = useCallback((event) => {
@@ -108,16 +131,43 @@ const UserInfo = ({ user }) => {
     };
   }, [modalOpen, escapeModal]);
 
+  const handleAccountDelete = async () => {
+    var user = firebase.auth().currentUser;
+    user
+      .delete()
+      .then(() => {
+        browserHistory.push("/");
+      })
+      .catch((error) => {
+        alert(
+          `An error occured when trying to delete your account. Please try again.\n\nError: ${error}`
+        );
+      });
+  };
+
   return user ? (
     <InfoWrapper>
-      <HelloUser name={user.first_name} onClick={() => setModalOpen(true)} />
+      <HelloUser name={user.firstName} onClick={() => setModalOpen(true)} />
       {modalOpen && (
         <ModalWrapper onClick={() => setModalOpen(false)}>
           <UserInfoModal onClick={(e) => e.stopPropagation()}>
             <CardEntry>
+              <CardEntryTitle>Name</CardEntryTitle>
+              <CardEntryValue>
+                {user.firstName} {user.lastName}
+              </CardEntryValue>
+            </CardEntry>
+            <CardEntry>
               <CardEntryTitle>Email</CardEntryTitle>
               <CardEntryValue>{user.email}</CardEntryValue>
             </CardEntry>
+            <CardEntry>
+              <CardEntryTitle>Last Seen</CardEntryTitle>
+              <CardEntryValue>{user.lastSeen}</CardEntryValue>
+            </CardEntry>
+            <SubmitButton onClick={handleAccountDelete}>
+              Delete Account
+            </SubmitButton>
           </UserInfoModal>
         </ModalWrapper>
       )}

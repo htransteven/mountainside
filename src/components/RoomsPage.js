@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useFirebase } from "../contexts/FirebaseContext";
+import { useHistory } from "react-router-dom";
 
 import UserInfo from "./UserInfo";
 import RoomController from "./RoomController";
@@ -13,20 +14,16 @@ const PageWrapper = styled.div`
   justify-content: flex-start;
 `;
 
-const RoomsPage = () => {
+const RoomsPage = ({ user }) => {
+  const browserHistory = useHistory();
   const firebase = useFirebase();
-
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // get all available rooms from firestore
-    setUser({
-      first_name: "Steven",
-      last_name: "Huynh-Tran",
-      email: "email@example.com",
-    });
-  }, []);
-
+  if (!user) {
+    alert(
+      "You must log in with your UCSB Gmail account before accessing the study rooms."
+    );
+    browserHistory.replace("/");
+    return <></>;
+  }
   return (
     <PageWrapper>
       <UserInfo user={user} />

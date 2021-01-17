@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FirebaseContextProvider } from "./contexts/FirebaseContext";
 import RoomsPage from "./components/RoomsPage";
 import { colors } from "./defaultStyles";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { useFirebase } from "./contexts/FirebaseContext";
 import LoginMenu from "./components/LoginMenu.js";
-
 
 const MainWrapper = styled.div`
   width: 100%;
@@ -18,11 +16,15 @@ const MainWrapper = styled.div`
 const Main = () => {
   const firebase = useFirebase();
   const [loggedIn, setLoggedIn] = useState(false);
+
+  const [user, setUser] = useState(null);
   const db = firebase.firestore();
 
   const handleLogin = (user) => {
     console.log(user);
-     /*
+    setUser(user);
+
+    /*
     document.getElementById("firebaseui-auth-container").style.display = "none";
     // let guestMode = false;
     // if(user.search("guest") >= 0){
@@ -72,7 +74,7 @@ const Main = () => {
     }).catch(function(error) {
       console.log("Error getting document:", error);
     }); */
-  }
+  };
 
   return (
     <MainWrapper>
@@ -80,13 +82,13 @@ const Main = () => {
         <Navbar />
         <Switch>
           <Route path="/rooms">
-            <RoomsPage />
+            <RoomsPage user={user} />
           </Route>
           <Route path="/about">
             <></>
           </Route>
           <Route path="/">
-          <LoginMenu handleLogin={handleLogin}/>
+            <LoginMenu handleLogin={handleLogin} />
           </Route>
         </Switch>
       </BrowserRouter>
