@@ -17,6 +17,19 @@ const RoomsWrapper = styled.div`
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 20px;
   width: 100%;
+
+  @media (max-width: 1600px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 720px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 500px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 
 const TitleWrapper = styled.div`

@@ -73,6 +73,9 @@ const NavLinkWrapper = styled.div`
     @media (max-width: 520px) {
       font-size: 0.8rem;
     }
+    @media (max-width: 470px) {
+      font-size: 0.65rem;
+    }
   }
 `;
 
