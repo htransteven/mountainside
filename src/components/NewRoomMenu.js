@@ -158,6 +158,7 @@ const NewRoomMenu = ({ user, onSubmit }) => {
         id: createEventResponse.id,
         host: user.email,
         hangoutLink: createEventResponse.hangoutLink,
+        linkClicks: 0,
         name: roomName,
         isPublic: isPublic,
         password: roomPassword,

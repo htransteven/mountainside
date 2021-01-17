@@ -183,8 +183,7 @@ const TextInput = styled.input`
 const RoomCard = ({ isOwner, user, room }) => {
   const firebase = useFirebase();
   const db = firebase.firestore();
-  const { id, name, isPublic, mood, moodMessage } = room;
-
+  const { id, name, isPublic, mood, moodMessage, linkClicks } = room;
   const [modalOpen, setModalOpen] = useState(false);
   const [roomPassword, setRoomPassword] = useState("");
   const [unlocked, setUnlocked] = useState(isPublic);
@@ -219,6 +218,17 @@ const RoomCard = ({ isOwner, user, room }) => {
       .doc(id)
       .update({
         isPublic: !isPublic,
+      })
+      .catch((error) => {
+        alert(`Error: Failed to update room access.\n\nError: ${error}`);
+      });
+  };
+  const handleLinkClick = async () => {
+    await db
+      .collection("rooms")
+      .doc(id)
+      .update({
+        linkClicks: linkClicks + 1,
       })
       .catch((error) => {
         alert(`Error: Failed to update room access.\n\nError: ${error}`);
@@ -266,6 +276,10 @@ const RoomCard = ({ isOwner, user, room }) => {
           <CardEntryTitle>MOOD MESSAGE</CardEntryTitle>
           <CardEntryValue>{moodMessage}</CardEntryValue>
         </CardEntry>
+        <CardEntry>
+          <CardEntryTitle>CLICKS</CardEntryTitle>
+          <CardEntryValue>{linkClicks}</CardEntryValue>
+        </CardEntry>
         <IconContainer>
           {isOwner && (
             <CardIcon
@@ -292,7 +306,7 @@ const RoomCard = ({ isOwner, user, room }) => {
             {(isPublic || unlocked) && (
               <CardEntry>
                 <CardEntryTitle>Study Room Link</CardEntryTitle>
-                <CardEntryValueLink href={room.hangoutLink} target={"_blank"}>
+                <CardEntryValueLink onClick={handleLinkClick} href={room.hangoutLink} target={"_blank"}>
                   Click here to join the study room!
                 </CardEntryValueLink>
               </CardEntry>
