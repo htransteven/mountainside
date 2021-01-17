@@ -1,13 +1,34 @@
-import React, { useEffect, useMemo } from "react";
-import { render } from "react-dom";
-
-import "../css/loginmenu.css";
-
-import logo from "../images/svg/symbol_gradient.svg";
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import { colors, fonts } from "../defaultStyles";
 import * as firebaseui from "firebaseui";
 import "firebase/auth";
 import "firebase/firestore";
 import { useFirebase } from "../contexts/FirebaseContext";
+
+const FireBaseUIWrapper = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+`;
+
+const TitleLabel = styled.span`
+  font-family: ${fonts.primaryFont};
+  color: ${colors.lightBlue};
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  line-height: 1em;
+  margin-bottom: 1.5rem;
+`;
+const SubTitleLabel = styled.span`
+  font-family: ${fonts.secondaryFont};
+  color: ${colors.textSecondary};
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  line-height: 1em;
+  margin-bottom: 1.5rem;
+`;
 
 const LoginMenu = (props) => {
   const firebase = useFirebase();
@@ -22,7 +43,6 @@ const LoginMenu = (props) => {
           // User successfully signed in.
           // Return type determines whether we continue the redirect automatically
           // or whether we leave that to developer to handle.
-          console.log(authResult);
           if (authResult.user.email == null) {
             var date = new Date();
             var tempUser = "guest_" + date.getTime();
@@ -70,15 +90,11 @@ const LoginMenu = (props) => {
     ui.start("#firebaseui-auth-container", uiConfig);
   }, [firebase, props]);
   return (
-    <div id="firebaseui-auth-container">
-      {/* <img id="login-logo" src={logo}/>
-          <div id="login-title">Visualization for Contact Tracing</div> */}
-      <div id="login-subtitle">Please sign in to continue</div>
-      <div id="login-subtitle2">
-        If you don't have an account, start by entering an email.
-      </div>
-      <div id="loader">Loading...</div>
-    </div>
+    <FireBaseUIWrapper id="firebaseui-auth-container">
+      <TitleLabel>Welcome to the Study Rooms!</TitleLabel>
+      <SubTitleLabel>Please sign in with your UCSB Gmail account</SubTitleLabel>
+      <div id="loader">Loading...</div>{" "}
+    </FireBaseUIWrapper>
   );
 };
 

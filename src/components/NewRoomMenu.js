@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { colors, dimensions, fonts } from "../defaultStyles";
+import { colors, fonts } from "../defaultStyles";
 import { useFirebase } from "../contexts/FirebaseContext";
 
 const MenuWrapper = styled.div`

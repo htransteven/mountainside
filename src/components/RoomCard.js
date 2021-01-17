@@ -67,38 +67,6 @@ const CardEntryValue = styled.span`
   font-family: ${fonts.secondaryFont};
 `;
 
-const CardActions = styled.div`
-  display: flex;
-  flex: 1;
-  width: 100%;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-`;
-
-const JoinButton = styled.button`
-  z-index: 1;
-  outline: none;
-  border: none;
-  color: ${colors.textPrimary};
-  background: none;
-  opacity: 0.75;
-  font-size: 1.1em;
-  padding: 6px 18px;
-  border-radius: 5px;
-  border: 2px solid ${colors.textPrimary};
-  transition: 0.2s opacity, 0.2s color, 0.2s background-color;
-
-  &:hover {
-    opacity: 0.9;
-    background-color: ${colors.textPrimary};
-    color: ${colors.darkBlue};
-    border-bottom: 2px solid ${colors.textPrimary};
-    cursor: pointer;
-  }
-`;
-
 const CardIcon = styled.i`
   position: absolute;
   color: white;

@@ -11,8 +11,8 @@ const PageWrapper = styled.div`
   padding: 30px;
   display: flex;
   flex-flow: column nowrap;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: ${({ signedIn }) => (signedIn ? "flex-start" : "center")};
+  justify-content: ${({ signedIn }) => (signedIn ? "flex-start" : "center")};
 `;
 
 const RoomsPage = () => {
@@ -23,7 +23,7 @@ const RoomsPage = () => {
   };
 
   return (
-    <PageWrapper>
+    <PageWrapper signedIn={user}>
       {!user && <LoginMenu handleLogin={handleLogin} />}
       {user && <UserInfo user={user} />}
       {user && <RoomController user={user} />}
