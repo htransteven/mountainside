@@ -15,6 +15,12 @@ const Wrapper = styled.div`
   height: ${dimensions.navHeight};
   padding: 20px;
   width: 100%;
+
+  @media (max-width: 520px) {
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 const LeftContainer = styled.div`
@@ -46,14 +52,25 @@ const NavLogo = styled.img`
   @media (max-width: 768px) {
     width: 150px;
   }
+
+  @media (max-width: 520px) {
+    margin-bottom: 5px;
+  }
 `;
 
 const NavLinkWrapper = styled.div`
+  margin: 10px;
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+  &:last-of-type {
+    margin-right: 0;
+  }
   & > a {
     text-decoration: none;
     text-transform: uppercase;
     font-family: ${fonts.primaryFont};
-    margin-left: 20px;
     padding: 6px 12px;
     border: 1px solid transparent;
     border-radius: 5px;
@@ -72,9 +89,6 @@ const NavLinkWrapper = styled.div`
 
     @media (max-width: 520px) {
       font-size: 0.8rem;
-    }
-    @media (max-width: 470px) {
-      font-size: 0.65rem;
     }
   }
 `;
