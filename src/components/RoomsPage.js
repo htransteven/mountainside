@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import { useFirebase } from "../contexts/FirebaseContext";
-import { useHistory } from "react-router-dom";
 import LoginMenu from "./LoginMenu.js";
 
 import UserInfo from "./UserInfo";

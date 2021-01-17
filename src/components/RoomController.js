@@ -158,7 +158,7 @@ const RoomController = ({ user }) => {
         }
       });
     });
-  }, [db]);
+  }, [db, user.email]);
 
   return (
     <>
