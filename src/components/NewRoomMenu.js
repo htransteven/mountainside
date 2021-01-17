@@ -93,15 +93,18 @@ const DropDownMenuItem = ({ selected, disabled, hidden, value }) => {
   );
 };
 
-const moodOptions = ["Chilling", "Grinding", "Lasered"];
+const moodOptions = ["chilling", "grinding", "lasered"];
 
 const NewRoomMenu = ({ user, onSubmit }) => {
   const firebase = useFirebase();
   const db = firebase.firestore();
   //room name will start as UserName's Room
-  const [roomName, setRoomName] = useState("");
-  const [mood, setMood] = useState("");
+  const [roomName, setRoomName] = useState(
+    `${user.firstName} ${user.lastName}'s Study Room`
+  );
+  const [mood, setMood] = useState("chilling");
   const [isPublic, setIsPublic] = useState(false);
+  const [roomPassword, setRoomPassword] = useState("");
   const [moodMessage, setMoodMessage] = useState("");
 
   const createRoom = async (e) => {
@@ -157,6 +160,7 @@ const NewRoomMenu = ({ user, onSubmit }) => {
         hangoutLink: createEventResponse.hangoutLink,
         name: roomName,
         isPublic: isPublic,
+        password: roomPassword,
         mood: mood,
         moodMessage: moodMessage,
         createdTime: firebase.firestore.Timestamp.fromDate(
@@ -188,7 +192,7 @@ const NewRoomMenu = ({ user, onSubmit }) => {
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
         />
-        <InputLabel htmlFor={"new-room-public"}>Public?</InputLabel>
+        <InputLabel htmlFor={"new-room-public"}>Public</InputLabel>
         <DropDownMenu
           name={"new-room-public"}
           id={"new-room-public"}
@@ -196,24 +200,29 @@ const NewRoomMenu = ({ user, onSubmit }) => {
             setIsPublic(e.target.value === "true" ? true : false)
           }
         >
-          <DropDownMenuItem selected={true} value={"true"} />
-          <DropDownMenuItem value={"false"} />
+          <DropDownMenuItem value={"true"} />
+          <DropDownMenuItem selected={true} value={"false"} />
         </DropDownMenu>
+
+        {!isPublic && (
+          <>
+            <InputLabel htmlFor={"new-room-password"}>Password</InputLabel>
+            <TextInput
+              id={"new-room-password"}
+              type="text"
+              value={roomPassword}
+              onChange={(e) => setRoomPassword(e.target.value)}
+            />
+          </>
+        )}
         <InputLabel htmlFor={"new-room-mood"}>Mood</InputLabel>
         <DropDownMenu
           name={"new-room-moods"}
           id={"new-room-moods"}
           onChange={(e) => setMood(e.target.value)}
-          placeholder={"Select a mood"}
         >
-          <DropDownMenuItem
-            hidden={true}
-            disabled={true}
-            selected={true}
-            value={"Select a mood"}
-          />
-          {moodOptions.map((option) => (
-            <DropDownMenuItem value={option} />
+          {moodOptions.map((option, index) => (
+            <DropDownMenuItem selected={index === 0} value={option} />
           ))}
         </DropDownMenu>
         <InputLabel htmlFor={"new-room-mood-message"}>Mood Message</InputLabel>

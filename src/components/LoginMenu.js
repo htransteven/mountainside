@@ -30,7 +30,7 @@ const SubTitleLabel = styled.span`
   margin-bottom: 1.5rem;
 `;
 
-const LoginMenu = (props) => {
+const LoginMenu = ({ onAuthenticated }) => {
   const firebase = useFirebase();
 
   useEffect(() => {
@@ -43,22 +43,15 @@ const LoginMenu = (props) => {
           // User successfully signed in.
           // Return type determines whether we continue the redirect automatically
           // or whether we leave that to developer to handle.
-          if (authResult.user.email == null) {
-            var date = new Date();
-            var tempUser = "guest_" + date.getTime();
-            props.handleLogin(tempUser);
-          } else {
-            // Extract usefule data
-            const user = {};
-            user["email"] = authResult.additionalUserInfo.profile.email;
-            user["firstName"] =
-              authResult.additionalUserInfo.profile.given_name;
-            user["lastName"] =
-              authResult.additionalUserInfo.profile.family_name;
-            user["lastSeen"] = authResult.user.metadata.lastSignInTime;
-            user["accessToken"] = authResult.credential.accessToken;
-            props.handleLogin(user);
-          }
+
+          // Extract usefule data
+          const user = {};
+          user["email"] = authResult.additionalUserInfo.profile.email;
+          user["firstName"] = authResult.additionalUserInfo.profile.given_name;
+          user["lastName"] = authResult.additionalUserInfo.profile.family_name;
+          user["lastSeen"] = authResult.user.metadata.lastSignInTime;
+          user["accessToken"] = authResult.credential.accessToken;
+          onAuthenticated(user);
           //Return false to let dev handle
           return false;
         },
@@ -88,7 +81,7 @@ const LoginMenu = (props) => {
       privacyPolicyUrl: "",
     };
     ui.start("#firebaseui-auth-container", uiConfig);
-  }, [firebase, props]);
+  }, [firebase, onAuthenticated]);
   return (
     <FireBaseUIWrapper id="firebaseui-auth-container">
       <TitleLabel>Welcome to the Study Rooms!</TitleLabel>

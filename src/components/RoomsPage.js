@@ -15,16 +15,10 @@ const PageWrapper = styled.div`
   justify-content: ${({ signedIn }) => (signedIn ? "flex-start" : "center")};
 `;
 
-const RoomsPage = () => {
-  const [user, setUser] = useState(null);
-
-  const handleLogin = (user) => {
-    setUser(user);
-  };
-
+const RoomsPage = ({ user, onLogin }) => {
   return (
     <PageWrapper signedIn={user}>
-      {!user && <LoginMenu handleLogin={handleLogin} />}
+      {!user && <LoginMenu onAuthenticated={onLogin} />}
       {user && <UserInfo user={user} />}
       {user && <RoomController user={user} />}
     </PageWrapper>

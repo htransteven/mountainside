@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import RoomsPage from "./components/RoomsPage";
 import { colors } from "./defaultStyles";
@@ -12,13 +12,14 @@ const MainWrapper = styled.div`
 `;
 
 const Main = () => {
+  const [user, setUser] = useState(null);
   return (
     <MainWrapper>
       <BrowserRouter>
         <Navbar />
         <Switch>
           <Route path="/rooms">
-            <RoomsPage />
+            <RoomsPage user={user} onLogin={setUser} />
           </Route>
           <Route path="/about">
             <></>

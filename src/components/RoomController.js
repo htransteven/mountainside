@@ -127,8 +127,23 @@ const RoomController = ({ user }) => {
               return copy;
             });
           }
-        }
-        if (change.type === "removed") {
+        } else if (change.type === "modified") {
+          setRooms((prev) => {
+            const copy = [...prev];
+            const index = copy.findIndex((room) => room.id === docData.id);
+            copy[index] = docData;
+            return copy;
+          });
+
+          if (docData.host === user.email) {
+            setMyRooms((prev) => {
+              const copy = [...prev];
+              const index = copy.findIndex((room) => room.id === docData.id);
+              copy[index] = docData;
+              return copy;
+            });
+          }
+        } else if (change.type === "removed") {
           setRooms((prev) => {
             const copy = [...prev];
             return copy.filter((room) => room.id !== docData.id);
