@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useFirebase } from "../contexts/FirebaseContext";
 import { useHistory } from "react-router-dom";
+import LoginMenu from "./LoginMenu.js";
 
 import UserInfo from "./UserInfo";
 import RoomController from "./RoomController";
@@ -14,20 +15,18 @@ const PageWrapper = styled.div`
   justify-content: flex-start;
 `;
 
-const RoomsPage = ({ user }) => {
-  const browserHistory = useHistory();
-  const firebase = useFirebase();
-  if (!user) {
-    alert(
-      "You must log in with your UCSB Gmail account before accessing the study rooms."
-    );
-    browserHistory.replace("/");
-    return <></>;
-  }
+const RoomsPage = () => {
+  const [user, setUser] = useState(null);
+
+  const handleLogin = (user) => {
+    setUser(user);
+  };
+
   return (
     <PageWrapper>
-      <UserInfo user={user} />
-      <RoomController user={user} />
+      {!user && <LoginMenu handleLogin={handleLogin} />}
+      {user && <UserInfo user={user} />}
+      {user && <RoomController user={user} />}
     </PageWrapper>
   );
 };

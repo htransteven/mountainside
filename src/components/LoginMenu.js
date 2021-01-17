@@ -61,8 +61,6 @@ const LoginMenu = (props) => {
           provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
           scopes: ["https://www.googleapis.com/auth/calendar.events"],
         },
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
       ],
       // Terms of service url.
       tosUrl: "",
@@ -70,7 +68,7 @@ const LoginMenu = (props) => {
       privacyPolicyUrl: "",
     };
     ui.start("#firebaseui-auth-container", uiConfig);
-  }, []);
+  }, [firebase, props]);
   return (
     <div id="firebaseui-auth-container">
       {/* <img id="login-logo" src={logo}/>
