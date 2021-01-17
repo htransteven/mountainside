@@ -9,6 +9,7 @@
     ]
   },
   "hosting": {
+    "site": "mountainside-web",
     "public": "build",
     "ignore": [
       "firebase.json",

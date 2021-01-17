@@ -40,7 +40,7 @@ const ActionButton = styled.button`
   border: none;
   color: ${colors.textPrimary};
   background: none;
-  opacity: 0.75;
+  opacity: 0.85;
   margin-left: 20px;
   font-size: 1.1em;
   padding: 3px 12px;
@@ -50,7 +50,7 @@ const ActionButton = styled.button`
   transition: 0.2s opacity, 0.2s color, 0.2s background-color;
 
   &:hover {
-    opacity: 0.9;
+    opacity: 1;
     background-color: ${colors.lightBlue};
     color: ${colors.textPrimary};
     cursor: pointer;

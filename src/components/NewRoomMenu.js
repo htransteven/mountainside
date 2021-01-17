@@ -199,9 +199,10 @@ const NewRoomMenu = ({ user, onSubmit }) => {
           onChange={(e) =>
             setIsPublic(e.target.value === "true" ? true : false)
           }
+          defaultValue={"true"}
         >
           <DropDownMenuItem value={"true"} />
-          <DropDownMenuItem selected={true} value={"false"} />
+          <DropDownMenuItem value={"false"} />
         </DropDownMenu>
 
         {!isPublic && (
@@ -220,9 +221,10 @@ const NewRoomMenu = ({ user, onSubmit }) => {
           name={"new-room-moods"}
           id={"new-room-moods"}
           onChange={(e) => setMood(e.target.value)}
+          defaultValue={"chilling"}
         >
           {moodOptions.map((option, index) => (
-            <DropDownMenuItem selected={index === 0} value={option} />
+            <DropDownMenuItem key={`mood-${index}`} value={option} />
           ))}
         </DropDownMenu>
         <InputLabel htmlFor={"new-room-mood-message"}>Mood Message</InputLabel>
