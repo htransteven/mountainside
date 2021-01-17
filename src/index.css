@@ -2,6 +2,22 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 18x;
+}
+
+a {
+  font-size: 1.15rem;
+}
+
+span {
+  font-size: 1.1rem;
+}
+
+p {
+  font-size: 1.05rem;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { colors } from "../defaultStyles";
+import { colors, fonts } from "../defaultStyles";
 
 const CardWrapper = styled.div`
   position: relative;
@@ -12,6 +12,14 @@ const CardWrapper = styled.div`
   overflow: hidden;
   padding: 25px;
   box-shadow: 0px 2px 20px 2px rgba(0, 0, 0, 0.5);
+  transition: 0.35s transform, 0.35s box-shadow, 0.35s opacity;
+  opacity: 0.85;
+  &:hover {
+    opacity: 1;
+    transform: translateY(-8px);
+    box-shadow: 0px 6px 25px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
 `;
 
 const CardFill = styled.div`
@@ -48,11 +56,14 @@ const CardEntry = styled.div`
 const CardEntryTitle = styled.span`
   color: ${colors.textSecondary};
   margin-bottom: -2px;
+  font-family: ${fonts.primaryFont};
+  font-size: 0.9rem;
 `;
 
 const CardEntryValue = styled.span`
   color: ${colors.textPrimary};
-  font-size: 1.05em;
+  font-size: 1.2em;
+  font-family: ${fonts.secondaryFont};
 `;
 
 const CardActions = styled.div`
@@ -103,9 +114,6 @@ const RoomCard = ({ roomName, isPublic, mood }) => {
         <CardEntryTitle>MOOD</CardEntryTitle>
         <CardEntryValue>{mood}</CardEntryValue>
       </CardEntry>
-      <CardActions>
-        <JoinButton>{isPublic ? "Join Room" : "Request to Join"}</JoinButton>
-      </CardActions>
     </CardWrapper>
   );
 };

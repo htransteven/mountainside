@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { FirebaseContextProvider } from "./contexts/FirebaseContext";
-import Home from "./components/Home";
+import RoomsPage from "./components/RoomsPage";
 import { colors } from "./defaultStyles";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
 
 const MainWrapper = styled.div`
   width: 100%;
@@ -13,9 +15,20 @@ const MainWrapper = styled.div`
 const Main = () => {
   return (
     <MainWrapper>
-      <FirebaseContextProvider>
-        <Home />
-      </FirebaseContextProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Switch>
+          <Route path="/rooms">
+            <RoomsPage />
+          </Route>
+          <Route path="/about">
+            <></>
+          </Route>
+          <Route path="/">
+            <></>
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </MainWrapper>
   );
 };
