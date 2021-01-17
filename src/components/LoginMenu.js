@@ -47,6 +47,12 @@ const LoginMenu = ({ onAuthenticated }) => {
           // Extract usefule data
           const user = {};
           user["email"] = authResult.additionalUserInfo.profile.email;
+          const email_ending = user.email.substring(user.email.length - 8);
+          const valid = "ucsb.edu";
+          if(valid !== email_ending){
+            alert("You need to log in through a valid UCSB email.");
+            window.location.reload()
+          }
           user["firstName"] = authResult.additionalUserInfo.profile.given_name;
           user["lastName"] = authResult.additionalUserInfo.profile.family_name;
           user["lastSeen"] = authResult.user.metadata.lastSignInTime;
