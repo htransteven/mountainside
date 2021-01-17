@@ -116,8 +116,8 @@ const ModalWrapper = styled.div`
   z-index: 1;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   background-color: rgba(0, 0, 0, 0.85);
 `;
 
@@ -306,7 +306,11 @@ const RoomCard = ({ isOwner, user, room }) => {
             {(isPublic || unlocked) && (
               <CardEntry>
                 <CardEntryTitle>Study Room Link</CardEntryTitle>
-                <CardEntryValueLink onClick={handleLinkClick} href={room.hangoutLink} target={"_blank"}>
+                <CardEntryValueLink
+                  onClick={handleLinkClick}
+                  href={room.hangoutLink}
+                  target={"_blank"}
+                >
                   Click here to join the study room!
                 </CardEntryValueLink>
               </CardEntry>

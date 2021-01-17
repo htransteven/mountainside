@@ -79,7 +79,7 @@ const Navbar = () => {
       <RightContainer>
         <NavLink to={"/"}>Home</NavLink>
         <NavLink to={"/rooms"}>Study Rooms</NavLink>
-        <NavLink to={"/about"}>About</NavLink>
+        <NavLink to={"/team"}>Team</NavLink>
       </RightContainer>
     </Wrapper>
   );

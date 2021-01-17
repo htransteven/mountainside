@@ -200,7 +200,7 @@ const NewRoomMenu = ({ user, onSubmit }) => {
           onChange={(e) =>
             setIsPublic(e.target.value === "true" ? true : false)
           }
-          defaultValue={"true"}
+          defaultValue={"false"}
         >
           <DropDownMenuItem value={"true"} />
           <DropDownMenuItem value={"false"} />
