@@ -1,8 +1,14 @@
-import React, { useState, useLayoutEffect, useCallback } from "react";
+import React, {
+  useState,
+  useLayoutEffect,
+  useCallback,
+  useContext,
+} from "react";
 import styled from "styled-components";
 import { colors, fonts } from "../defaultStyles";
 import { useFirebase } from "../contexts/FirebaseContext";
 import { useHistory } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const InfoWrapper = styled.div`
   display: flex;
@@ -27,14 +33,6 @@ const HelloName = styled(HelloWrapper)`
     cursor: pointer;
   }
 `;
-
-const HelloUser = ({ name, onClick }) => {
-  return (
-    <HelloWrapper>
-      Welcome back, <HelloName onClick={onClick}>{name}</HelloName>!
-    </HelloWrapper>
-  );
-};
 
 const ModalWrapper = styled.div`
   position: absolute;
@@ -109,9 +107,10 @@ const SubmitButton = styled.button`
   }
 `;
 
-const UserInfo = ({ user }) => {
+const UserInfo = () => {
   const browserHistory = useHistory();
   const firebase = useFirebase();
+  const user = useContext(UserContext);
   const [modalOpen, setModalOpen] = useState(false);
 
   const escapeModal = useCallback((event) => {
@@ -132,9 +131,9 @@ const UserInfo = ({ user }) => {
   }, [modalOpen, escapeModal]);
 
   const handleAccountDelete = async () => {
-    var user = firebase.auth().currentUser;
-    user
-      .delete()
+    var userFirestore = firebase.auth().currentUser;
+    userFirestore
+      ?.delete()
       .then(() => {
         browserHistory.push("/");
       })
@@ -147,7 +146,13 @@ const UserInfo = ({ user }) => {
 
   return user ? (
     <InfoWrapper>
-      <HelloUser name={user.firstName} onClick={() => setModalOpen(true)} />
+      <HelloWrapper>
+        Welcome back,{" "}
+        <HelloName onClick={() => setModalOpen(true)}>
+          {user.firstName}
+        </HelloName>
+        !
+      </HelloWrapper>
       {modalOpen && (
         <ModalWrapper onClick={() => setModalOpen(false)}>
           <UserInfoModal onClick={(e) => e.stopPropagation()}>
@@ -163,7 +168,7 @@ const UserInfo = ({ user }) => {
             </CardEntry>
             <CardEntry>
               <CardEntryTitle>Last Seen</CardEntryTitle>
-              <CardEntryValue>{user.lastSeen}</CardEntryValue>
+              <CardEntryValue>{user.lastSeen.toString()}</CardEntryValue>
             </CardEntry>
             <SubmitButton onClick={handleAccountDelete}>
               Delete Account

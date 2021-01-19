@@ -5,6 +5,7 @@ import * as firebaseui from "firebaseui";
 import "firebase/auth";
 import "firebase/firestore";
 import { useFirebase } from "../contexts/FirebaseContext";
+import { IUser } from "../models/user";
 
 const FireBaseUIWrapper = styled.div`
   display: flex;
@@ -31,7 +32,11 @@ const SubTitleLabel = styled.span`
   margin-bottom: 1.5rem;
 `;
 
-const LoginMenu = ({ onAuthenticated }) => {
+interface ILoginMenuProps {
+  onLogin: (user: IUser) => void;
+}
+
+const LoginMenu: React.FC<ILoginMenuProps> = ({ onLogin }) => {
   const firebase = useFirebase();
 
   useEffect(() => {
@@ -40,32 +45,48 @@ const LoginMenu = ({ onAuthenticated }) => {
       new firebaseui.auth.AuthUI(firebase.auth());
     const uiConfig = {
       callbacks: {
-        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+        signInSuccessWithAuthResult: function (
+          authResult: any,
+          redirectUrl: string
+        ) {
           // User successfully signed in.
           // Return type determines whether we continue the redirect automatically
           // or whether we leave that to developer to handle.
 
           // Extract usefule data
-          const user = {};
-          user["email"] = authResult.additionalUserInfo.profile.email;
+          const {
+            email,
+            given_name,
+            family_name,
+          } = authResult.additionalUserInfo.profile;
+          const user: IUser = {
+            email: email,
+            firstName: given_name,
+            lastName: family_name,
+            lastSeen: new Date(authResult.user.metadata.lastSignInTime),
+            accessToken: authResult.credential.accessToken,
+          };
+
+          /*
           const email_ending = user.email.substring(user.email.length - 8);
           const valid = "ucsb.edu";
           if (valid !== email_ending) {
             alert("You need to log in through a valid UCSB email.");
             window.location.reload();
           }
-          user["firstName"] = authResult.additionalUserInfo.profile.given_name;
-          user["lastName"] = authResult.additionalUserInfo.profile.family_name;
-          user["lastSeen"] = authResult.user.metadata.lastSignInTime;
-          user["accessToken"] = authResult.credential.accessToken;
-          onAuthenticated(user);
+          */
+
+          onLogin(user);
           //Return false to let dev handle
           return false;
         },
         uiShown: function () {
           // The widget is rendered.
           // Hide the loader.
-          document.getElementById("loader").style.display = "none";
+          const loaderElem = document.getElementById("loader");
+          if (loaderElem) {
+            loaderElem.style.display = "none";
+          }
         },
       },
 
@@ -88,7 +109,7 @@ const LoginMenu = ({ onAuthenticated }) => {
       privacyPolicyUrl: "",
     };
     ui.start("#firebaseui-auth-container", uiConfig);
-  }, [firebase, onAuthenticated]);
+  }, [firebase, onLogin]);
   return (
     <FireBaseUIWrapper id="firebaseui-auth-container">
       <TitleLabel>Welcome to the Study Rooms!</TitleLabel>

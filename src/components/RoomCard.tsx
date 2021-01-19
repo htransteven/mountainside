@@ -1,7 +1,14 @@
-import React, { useState, useCallback, useLayoutEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useLayoutEffect,
+  useContext,
+} from "react";
 import styled from "styled-components";
 import { colors, fonts } from "../defaultStyles";
 import { useFirebase } from "../contexts/FirebaseContext";
+import { IStudyRoom } from "../models/studyRoom";
+import { UserContext } from "../contexts/UserContext";
 
 const CardWrapper = styled.div`
   position: relative;
@@ -90,7 +97,7 @@ const IconContainer = styled.div`
   justify-content: center;
 `;
 
-const CardIcon = styled.i`
+const CardIcon = styled.i<{ hoverColor: string }>`
   color: ${colors.textPrimary};
   display: flex;
   font-size: 1.3rem;
@@ -107,7 +114,7 @@ const CardIcon = styled.i`
   }
 
   &:hover {
-    color: ${({ hoverColor }) => hoverColor};
+    color: ${({ hoverColor }) => hoverColor || ""};
   }
 `;
 
@@ -180,13 +187,18 @@ const TextInput = styled.input`
   border-radius: 5px;
 `;
 
-const RoomCard = ({ isOwner, user, room }) => {
+interface IRoomCard {
+  room: IStudyRoom;
+}
+
+const RoomCard: React.FC<IRoomCard> = ({ room }) => {
   const firebase = useFirebase();
   const db = firebase.firestore();
-  const { id, name, isPublic, mood, moodMessage, linkClicks } = room;
-  const [modalOpen, setModalOpen] = useState(false);
-  const [roomPassword, setRoomPassword] = useState("");
-  const [unlocked, setUnlocked] = useState(isPublic);
+  const user = useContext(UserContext);
+  const { id, name, focusLevel, isPublic, description, linkClicks } = room;
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [roomPassword, setRoomPassword] = useState<string>("");
+  const [unlocked, setUnlocked] = useState<boolean>(isPublic);
 
   const escapeModal = useCallback((event) => {
     if (event.keyCode === 27) {
@@ -235,21 +247,8 @@ const RoomCard = ({ isOwner, user, room }) => {
       });
   };
 
-  const handleDeleteEvent = async (e) => {
+  const handleDeleteEvent = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const requestOptions = {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${user.accessToken}`,
-        "Content-Type": "application/json",
-      },
-    };
-    await fetch(
-      `https://www.googleapis.com/calendar/v3/calendars/${user.email}/events/${id}`,
-      requestOptions
-    ).catch(function (error) {
-      alert(`Error: Failed to delete event from calendar\n\nError: ${error}`);
-    });
     await db
       .collection("rooms")
       .doc(id)
@@ -259,6 +258,8 @@ const RoomCard = ({ isOwner, user, room }) => {
         alert(`Error: Failed to delete room from database\n\nError: ${error}`);
       });
   };
+
+  const isOwner = user?.email === room.host;
 
   return (
     <>
@@ -270,11 +271,11 @@ const RoomCard = ({ isOwner, user, room }) => {
         </CardEntry>
         <CardEntry>
           <CardEntryTitle>MOOD</CardEntryTitle>
-          <CardEntryValue>{mood}</CardEntryValue>
+          <CardEntryValue>{focusLevel}</CardEntryValue>
         </CardEntry>
         <CardEntry>
-          <CardEntryTitle>MOOD MESSAGE</CardEntryTitle>
-          <CardEntryValue>{moodMessage}</CardEntryValue>
+          <CardEntryTitle>DESCRIPTION</CardEntryTitle>
+          <CardEntryValue>{description}</CardEntryValue>
         </CardEntry>
         <CardEntry>
           <CardEntryTitle>CLICKS</CardEntryTitle>
@@ -322,7 +323,7 @@ const RoomCard = ({ isOwner, user, room }) => {
                   room's super secret password!
                 </CardEntryValue>
                 <InputWrapper>
-                  <InputLabel htmlFor={"new-room-name"} type="text">
+                  <InputLabel htmlFor={"new-room-name"}>
                     Room Password
                   </InputLabel>
                   <TextInput

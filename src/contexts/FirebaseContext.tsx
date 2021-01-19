@@ -2,7 +2,7 @@ import React, { createContext, useContext, useMemo } from "react";
 import firebase from "firebase/app";
 import "firebase/analytics";
 
-const firebaseContext = createContext(null);
+const firebaseContext = createContext<typeof firebase | null>(null);
 
 export const useFirebase = () => {
   const api = useContext(firebaseContext);
@@ -13,7 +13,7 @@ export const useFirebase = () => {
   }
 };
 
-export const FirebaseContextProvider = (props) => {
+export const FirebaseContextProvider = (props: any) => {
   const { children } = props;
 
   const api = useMemo(() => {

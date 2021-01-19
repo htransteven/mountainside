@@ -71,7 +71,7 @@ const NavLinkWrapper = styled.div`
   }
 `;
 
-const NavLink = ({ to, children }) => {
+const NavLink: React.FC<{ to: string }> = ({ to, children }) => {
   return (
     <NavLinkWrapper>
       <Link to={to}>{children}</Link>

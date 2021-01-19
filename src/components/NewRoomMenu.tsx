@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { colors, fonts } from "../defaultStyles";
 import { useFirebase } from "../contexts/FirebaseContext";
+import { UserContext } from "../contexts/UserContext";
 
 const MenuWrapper = styled.div`
   width: 100%;
@@ -63,7 +64,7 @@ const DropDownMenu = styled.select`
   }
 `;
 
-const DropDownMenuItemWrapper = styled.option`
+const DropDownMenuItem = styled.option`
   text-transform: capitalize;
 `;
 
@@ -88,40 +89,32 @@ const SubmitButton = styled.button`
   }
 `;
 
-const DropDownMenuItem = ({ selected, disabled, hidden, value }) => {
-  return (
-    <DropDownMenuItemWrapper
-      selected={selected}
-      disabled={disabled}
-      hidden={hidden}
-      value={value}
-    >
-      {value}
-    </DropDownMenuItemWrapper>
-  );
-};
+interface INewRoomMenu {
+  onSubmit: () => void;
+}
 
-const moodOptions = ["chilling", "grinding", "lasered"];
-
-const NewRoomMenu = ({ user, onSubmit }) => {
+const NewRoomMenu: React.FC<INewRoomMenu> = ({ onSubmit }) => {
   const firebase = useFirebase();
   const db = firebase.firestore();
-  //room name will start as UserName's Room
-  const [roomName, setRoomName] = useState(
-    `${user.firstName} ${user.lastName}'s Study Room`
-  );
-  const [mood, setMood] = useState("chilling");
-  const [isPublic, setIsPublic] = useState(false);
-  const [roomPassword, setRoomPassword] = useState("");
-  const [moodMessage, setMoodMessage] = useState("");
+  const user = useContext(UserContext);
 
-  const createRoom = async (e) => {
+  //room name will start as UserName's Room
+  const [roomName, setRoomName] = useState<string>(
+    `${user?.firstName} ${user?.lastName}'s Study Room`
+  );
+  const [isPublic, setIsPublic] = useState<boolean>(false);
+  const [roomPassword, setRoomPassword] = useState<string>("");
+  const [focusLevel, setFocusLevel] = useState<number>(5);
+  const [description, setDescription] = useState<string>("");
+
+  const createRoom = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
     const today = new Date();
-    const requestOptions = {
+    const createRequestOptions = {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${user.accessToken}`,
+        Authorization: `Bearer ${user?.accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -149,29 +142,29 @@ const NewRoomMenu = ({ user, onSubmit }) => {
         },
         conferenceData: {
           createRequest: {
-            requestId: user.email,
+            requestId: user?.email,
           },
         },
       }),
     };
     const createEventResponse = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/${user.email}/events?conferenceDataVersion=1`,
-      requestOptions
+      createRequestOptions
     ).then((response) => response.json());
-    console.log(createEventResponse);
+
     await db
       .collection("rooms")
       .doc(createEventResponse.id)
       .set({
         id: createEventResponse.id,
-        host: user.email,
+        host: user?.email,
         hangoutLink: createEventResponse.hangoutLink,
         linkClicks: 0,
         name: roomName,
         isPublic: isPublic,
         password: roomPassword,
-        mood: mood,
-        moodMessage: moodMessage,
+        focusLevel: focusLevel,
+        description: description,
         createdTime: firebase.firestore.Timestamp.fromDate(
           new Date(createEventResponse.created)
         ),
@@ -181,6 +174,20 @@ const NewRoomMenu = ({ user, onSubmit }) => {
           `Error: Failed to create study room in the database.\n\nError: ${error}`
         );
       });
+
+    const deleteRequestOptions = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/${user.email}/events/${createEventResponse.id}`,
+      deleteRequestOptions
+    ).catch(function (error) {
+      alert(`Error: Failed to delete event from calendar\n\nError: ${error}`);
+    });
 
     onSubmit();
   };
@@ -192,9 +199,7 @@ const NewRoomMenu = ({ user, onSubmit }) => {
     >
       <TitleLabel>Create a New Study Room</TitleLabel>
       <MenuWrapper>
-        <InputLabel htmlFor={"new-room-name"} type="text">
-          Room Name
-        </InputLabel>
+        <InputLabel htmlFor={"new-room-name"}>Room Name</InputLabel>
         <TextInput
           id={"new-room-name"}
           type="text"
@@ -210,8 +215,8 @@ const NewRoomMenu = ({ user, onSubmit }) => {
           }
           defaultValue={"false"}
         >
-          <DropDownMenuItem value={"true"} />
-          <DropDownMenuItem value={"false"} />
+          <DropDownMenuItem value={"true"}>true</DropDownMenuItem>
+          <DropDownMenuItem value={"false"}>false</DropDownMenuItem>
         </DropDownMenu>
 
         {!isPublic && (
@@ -226,23 +231,14 @@ const NewRoomMenu = ({ user, onSubmit }) => {
           </>
         )}
         <InputLabel htmlFor={"new-room-mood"}>Mood</InputLabel>
-        <DropDownMenu
-          name={"new-room-moods"}
-          id={"new-room-moods"}
-          onChange={(e) => setMood(e.target.value)}
-          defaultValue={"chilling"}
-        >
-          {moodOptions.map((option, index) => (
-            <DropDownMenuItem key={`mood-${index}`} value={option} />
-          ))}
-        </DropDownMenu>
+        <div>Insert new focus level element</div>
         <InputLabel htmlFor={"new-room-mood-message"}>Mood Message</InputLabel>
         <TextInput
           id={"new-room-mood-message"}
           placeholder={"Optional"}
           type="text"
-          value={moodMessage}
-          onChange={(e) => setMoodMessage(e.target.value)}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </MenuWrapper>
       <SubmitButton>Create Room</SubmitButton>

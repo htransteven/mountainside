@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useCallback,
+  useContext,
 } from "react";
 import styled from "styled-components";
 import { fonts, colors } from "../defaultStyles";
@@ -11,6 +12,8 @@ import RoomCard from "./RoomCard";
 import NewRoomMenu from "./NewRoomMenu";
 
 import { useFirebase } from "../contexts/FirebaseContext";
+import { UserContext } from "../contexts/UserContext";
+import { IStudyRoom } from "../models/studyRoom";
 
 const RoomsWrapper = styled.div`
   display: grid;
@@ -96,11 +99,12 @@ const ModalContentWrapper = styled.div`
   justify-content: flex-start;
 `;
 
-const RoomController = ({ user }) => {
+const RoomController = () => {
   const firebase = useFirebase();
   const db = firebase.firestore();
-  const [rooms, setRooms] = useState([]);
-  const [myRooms, setMyRooms] = useState([]);
+  const user = useContext(UserContext);
+  const [rooms, setRooms] = useState<IStudyRoom[]>([]);
+  const [myRooms, setMyRooms] = useState<IStudyRoom[]>([]);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -129,13 +133,35 @@ const RoomController = ({ user }) => {
         if (change.type === "added") {
           setRooms((prev) => {
             const copy = [...prev];
-            copy.push(docData);
+            copy.push({
+              createdTime: docData.createdTime,
+              hangoutLink: docData.hangoutLink,
+              host: docData.host,
+              id: docData.id,
+              isPublic: docData.isPublic,
+              linkClicks: docData.linkClicks,
+              focusLevel: docData.focusLevel,
+              name: docData.name,
+              password: docData.password,
+              description: docData.description,
+            });
             return copy;
           });
-          if (docData.host === user.email) {
+          if (docData.host === user?.email) {
             setMyRooms((prev) => {
               const copy = [...prev];
-              copy.push(docData);
+              copy.push({
+                createdTime: docData.createdTime,
+                hangoutLink: docData.hangoutLink,
+                host: docData.host,
+                id: docData.id,
+                isPublic: docData.isPublic,
+                linkClicks: docData.linkClicks,
+                focusLevel: docData.focusLevel,
+                name: docData.name,
+                password: docData.password,
+                description: docData.description,
+              });
               return copy;
             });
           }
@@ -143,15 +169,37 @@ const RoomController = ({ user }) => {
           setRooms((prev) => {
             const copy = [...prev];
             const index = copy.findIndex((room) => room.id === docData.id);
-            copy[index] = docData;
+            copy[index] = {
+              createdTime: docData.createdTime,
+              hangoutLink: docData.hangoutLink,
+              host: docData.host,
+              id: docData.id,
+              isPublic: docData.isPublic,
+              linkClicks: docData.linkClicks,
+              focusLevel: docData.focusLevel,
+              name: docData.name,
+              password: docData.password,
+              description: docData.description,
+            };
             return copy;
           });
 
-          if (docData.host === user.email) {
+          if (docData.host === user?.email) {
             setMyRooms((prev) => {
               const copy = [...prev];
               const index = copy.findIndex((room) => room.id === docData.id);
-              copy[index] = docData;
+              copy[index] = {
+                createdTime: docData.createdTime,
+                hangoutLink: docData.hangoutLink,
+                host: docData.host,
+                id: docData.id,
+                isPublic: docData.isPublic,
+                linkClicks: docData.linkClicks,
+                focusLevel: docData.focusLevel,
+                name: docData.name,
+                password: docData.password,
+                description: docData.description,
+              };
               return copy;
             });
           }
@@ -161,7 +209,7 @@ const RoomController = ({ user }) => {
             return copy.filter((room) => room.id !== docData.id);
           });
 
-          if (docData.host === user.email) {
+          if (docData.host === user?.email) {
             setMyRooms((prev) => {
               const copy = [...prev];
               return copy.filter((room) => room.id !== docData.id);
@@ -170,7 +218,7 @@ const RoomController = ({ user }) => {
         }
       });
     });
-  }, [db, user.email]);
+  }, [db, user]);
 
   return (
     <>
@@ -182,7 +230,7 @@ const RoomController = ({ user }) => {
       </TitleWrapper>
       <RoomsWrapper>
         {myRooms.map((room) => (
-          <RoomCard room={room} isOwner={true} user={user} />
+          <RoomCard room={room} />
         ))}
       </RoomsWrapper>
       <TitleWrapper>
@@ -190,13 +238,13 @@ const RoomController = ({ user }) => {
       </TitleWrapper>
       <RoomsWrapper>
         {rooms.map((room) => (
-          <RoomCard room={room} user={user} />
+          <RoomCard room={room} />
         ))}
       </RoomsWrapper>
       {modalOpen && (
         <ModalWrapper onClick={() => setModalOpen(false)}>
           <ModalContentWrapper onClick={(e) => e.stopPropagation()}>
-            <NewRoomMenu user={user} onSubmit={() => setModalOpen(false)} />
+            <NewRoomMenu onSubmit={() => setModalOpen(false)} />
           </ModalContentWrapper>
         </ModalWrapper>
       )}

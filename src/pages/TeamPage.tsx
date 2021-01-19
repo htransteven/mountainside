@@ -79,7 +79,7 @@ const Icon = styled.i`
   margin-right: 10px;
 `;
 
-const AboutPage = () => {
+const TeamPage = () => {
   return (
     <PageWrapper>
       <PhotoGrid>
@@ -124,4 +124,4 @@ const AboutPage = () => {
   );
 };
 
-export default AboutPage;
+export default TeamPage;

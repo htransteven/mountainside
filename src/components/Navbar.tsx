@@ -58,7 +58,7 @@ const NavLogo = styled.img`
   }
 `;
 
-const NavLinkWrapper = styled.div`
+const NavLinkWrapper = styled.div<{ active: boolean }>`
   margin: 10px;
 
   &:first-of-type {
@@ -93,13 +93,17 @@ const NavLinkWrapper = styled.div`
   }
 `;
 
-const NavLink = ({ to, children }) => {
+interface INavLink {
+  to: string;
+}
+
+const NavLink: React.FC<INavLink> = ({ to, children }) => {
   let match = useRouteMatch({
     path: to,
     exact: true,
   });
   return (
-    <NavLinkWrapper active={match}>
+    <NavLinkWrapper active={!!match}>
       <Link to={to}>{children}</Link>
     </NavLinkWrapper>
   );
@@ -115,6 +119,7 @@ const Navbar = () => {
         <NavLink to={"/"}>Home</NavLink>
         <NavLink to={"/rooms"}>Study Rooms</NavLink>
         <NavLink to={"/team"}>Team</NavLink>
+        <NavLink to={"/privacy"}>Privacy</NavLink>
       </RightContainer>
     </Wrapper>
   );

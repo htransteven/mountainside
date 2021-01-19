@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import RoomsPage from "./components/RoomsPage";
 import { colors } from "./defaultStyles";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import HomePage from "./components/HomePage";
-import AboutPage from "./components/AboutPage";
+import HomePage from "./pages/HomePage";
+import StudyRoomsPage from "./pages/StudyRoomsPage";
+import TeamPage from "./pages/TeamPage";
+import PrivacyPage from "./pages/PrivacyPage";
 
 const MainWrapper = styled.div`
   width: 100%;
@@ -14,17 +15,19 @@ const MainWrapper = styled.div`
 `;
 
 const Main = () => {
-  const [user, setUser] = useState(null);
   return (
     <MainWrapper>
       <BrowserRouter>
         <Navbar />
         <Switch>
           <Route path="/rooms">
-            <RoomsPage user={user} onLogin={setUser} />
+            <StudyRoomsPage />
           </Route>
           <Route path="/team">
-            <AboutPage />
+            <TeamPage />
+          </Route>
+          <Route path="/privacy">
+            <PrivacyPage />
           </Route>
           <Route path="/">
             <HomePage />
